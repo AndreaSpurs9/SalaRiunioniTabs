@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <!--<button ion-button menuToggle>-->
+      <!--<ion-icon name="menu"></ion-icon>-->
+    <!--</button>-->
+    <ion-title>{{viewTitle}}</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="actionSheetLogout()"><ion-icon name="more"></ion-icon></button>
+      <button ion-button [disabled]="isToday" (click)="today()">Oggi</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="has-header">
+  <div>
+  <calendar [eventSource]="this.eventList"
+            [calendarMode]="calendar.mode"
+            [currentDate]="calendar.currentDate"
+            [allDayLabel]="giornoInteroLabel"
+            [noEventsLabel]="nessunaPrenotazioneLabel"
+            [startingDayMonth]="1"
+            [startingDayWeek]="1"
+            (onCurrentDateChanged)="onCurrentDateChanged($event)"
+            (onEventSelected)="onEventSelected($event)"
+            (onTitleChanged)="onViewTitleChanged($event)"
+            (onTimeSelected)="onTimeSelected($event)"
+            step="30">
+  </calendar>
+</div>
+<br><br><br><br><br>
+  <ion-fab bottom right>
+    <button ion-fab mini color="primary" (click)="add()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Prenotazione</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form #prenotaForm="ngForm" (ngSubmit)="prenotazione()">
+    <ion-item>
+      <ion-label floating color="primary">Oggetto riunione</ion-label>
+      <ion-input type="text" name="title" [(ngModel)]="evento.title"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating color="primary">Giorno prenotazione</ion-label>
+      <ion-datetime displayFormat="DD-MMMM-YYYY" [min]="this.minDate" [max]="this.maxDate" name="giorno" [(ngModel)]="this.dataSelezionata"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label color="primary">Prenota tutto il giorno</ion-label>
+      <ion-checkbox item-right name="flag" value="true" [(ngModel)]="flag"></ion-checkbox>
+    </ion-item>
+
+    <ion-item *ngIf="!flag">
+      <ion-label floating color="primary">Orario inizio prenotazione</ion-label>
+      <ion-datetime displayFormat="HH:mm" max="18:00" min="09:00" minuteValues="0,15,30,45" name="startTime"
+                    [(ngModel)]="startTime"></ion-datetime>
+    </ion-item>
+
+    <ion-item *ngIf="!flag">
+      <ion-label floating color="primary">Orario fine prenotazione</ion-label>
+      <ion-datetime displayFormat="HH:mm" max="18:00" [min]=startTime minuteValues="0,15,30,45" name="endTime"
+                    [(ngModel)]="endTime"></ion-datetime>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <button ion-button type="submit" block>Prenota</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

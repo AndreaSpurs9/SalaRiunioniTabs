@@ -1,40 +1,63 @@
-import { NgModule, ErrorHandler } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { MyApp } from './app.component';
+import {NgModule, ErrorHandler, LOCALE_ID} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {IonicApp, IonicModule, IonicErrorHandler} from 'ionic-angular';
+import {SalaRiunioni} from './app.component';
 
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
-import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
+import {StatusBar} from '@ionic-native/status-bar';
+import {SplashScreen} from '@ionic-native/splash-screen';
+import {NgCalendarModule} from "ionic2-calendar";
+import {CalendarPage} from "../pages/calendar/calendar";
+import {EventProvider} from '../providers/event/event';
+import {TabsPage} from "../pages/tabs/tabs";
+import {BrowserXhr, HttpModule} from "@angular/http";
+import {PrenotaPage} from "../pages/prenota/prenota";
+import {UserProvider} from '../providers/user/user';
+import {LoginPage} from "../pages/login/login";
+import {RegisterPage} from "../pages/register/register";
+import {CustomBrowserXhr} from "./services/custom-browser-xhr";
+import {LogoutPage} from "../pages/logout/logout";
 
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
 
 @NgModule({
   declarations: [
-    MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    TabsPage
+    SalaRiunioni,
+    TabsPage,
+    CalendarPage,
+    PrenotaPage,
+    LoginPage,
+    RegisterPage,
+    LogoutPage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(SalaRiunioni, {
+      monthNames: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+      monthShortNames: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
+      dayNames: ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'],
+      dayShortNames: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
+    }),
+    NgCalendarModule,
+    HttpModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    TabsPage
+    SalaRiunioni,
+    TabsPage,
+    CalendarPage,
+    PrenotaPage,
+    LoginPage,
+    RegisterPage,
+    LogoutPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    EventProvider,
+    {provide: LOCALE_ID, useValue: 'it-IT'},
+    UserProvider,
+    {provide: BrowserXhr, useClass: CustomBrowserXhr},
   ]
 })
-export class AppModule {}
+export class AppModule {
+}
