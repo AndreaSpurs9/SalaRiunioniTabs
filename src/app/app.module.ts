@@ -15,7 +15,9 @@ import {UserProvider} from '../providers/user/user';
 import {LoginPage} from "../pages/login/login";
 import {RegisterPage} from "../pages/register/register";
 import {CustomBrowserXhr} from "./services/custom-browser-xhr";
-import {LogoutPage} from "../pages/logout/logout";
+import {EventDetailsPage} from "../pages/event-details/event-details";
+import {IonicStorageModule} from "@ionic/storage";
+import {ModificaPage} from "../pages/modifica/modifica";
 
 
 @NgModule({
@@ -26,7 +28,8 @@ import {LogoutPage} from "../pages/logout/logout";
     PrenotaPage,
     LoginPage,
     RegisterPage,
-    LogoutPage
+    EventDetailsPage,
+    ModificaPage,
   ],
   imports: [
     BrowserModule,
@@ -38,6 +41,7 @@ import {LogoutPage} from "../pages/logout/logout";
     }),
     NgCalendarModule,
     HttpModule,
+    IonicStorageModule.forRoot(),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -47,7 +51,8 @@ import {LogoutPage} from "../pages/logout/logout";
     PrenotaPage,
     LoginPage,
     RegisterPage,
-    LogoutPage
+    EventDetailsPage,
+    ModificaPage,
   ],
   providers: [
     StatusBar,
@@ -57,6 +62,7 @@ import {LogoutPage} from "../pages/logout/logout";
     {provide: LOCALE_ID, useValue: 'it-IT'},
     UserProvider,
     {provide: BrowserXhr, useClass: CustomBrowserXhr},
+    Storage,
   ]
 })
 export class AppModule {

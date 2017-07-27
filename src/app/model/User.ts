@@ -1,6 +1,6 @@
 import {UserProfileType} from "./UserProfileType";
 export class User {
-  idUser: number;
+  idUser?: number;
   username: string;
   password: string;
   profileType: UserProfileType;

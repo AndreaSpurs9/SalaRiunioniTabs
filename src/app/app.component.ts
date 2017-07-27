@@ -1,28 +1,38 @@
 import {Component, ViewChild} from '@angular/core';
 import {Nav, Platform} from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+import {StatusBar} from '@ionic-native/status-bar';
+import {SplashScreen} from '@ionic-native/splash-screen';
 
 import {CalendarPage} from "../pages/calendar/calendar";
-import {LogoutPage} from "../pages/logout/logout";
+import {UserProvider} from "../providers/user/user";
+import {User} from "./model/User";
 
 @Component({
   templateUrl: 'app.html'
 })
 export class SalaRiunioni {
   @ViewChild(Nav) nav: Nav;
+  userDaLoggare = new User;
+  rootPage: any = CalendarPage;
 
-  rootPage:any = CalendarPage;
+  pages: Array<{ title: string, component: any }>;
 
-  pages: Array<{title: string, component: any}>;
-
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private userProvider: UserProvider) {
     this.initializeApp();
+
+    this.userDaLoggare.username = atob(localStorage.getItem('currentUser'));
+    this.userDaLoggare.password = atob(localStorage.getItem('currentPassword'));
+
+    this.userProvider.login(this.userDaLoggare).subscribe(res => {
+      }, err => {
+        console.log(err);
+      }
+    );
+
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Calendario', component: CalendarPage },
-      { title: 'Logout', component: LogoutPage },
+      {title: 'Calendario', component: CalendarPage},
     ];
 
   }

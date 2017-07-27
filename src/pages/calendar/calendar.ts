@@ -1,10 +1,12 @@
 import {Component, ViewChild} from '@angular/core';
 import {CalendarComponent} from "ionic2-calendar/calendar";
 import {EventProvider} from "../../providers/event/event";
-import {ActionSheetController, AlertController, NavController} from "ionic-angular";
+import {ActionSheetController, NavController} from "ionic-angular";
 import {LoginPage} from "../login/login";
 import {PrenotaPage} from "../prenota/prenota";
 import {UserProvider} from "../../providers/user/user";
+import {EventDetailsPage} from "../event-details/event-details";
+import {Event} from "../../app/model/Event";
 
 @Component({
   templateUrl: "calendar.html"
@@ -17,15 +19,18 @@ export class CalendarPage {
   giornoInteroLabel: string = "Giorno intero";
   nessunaPrenotazioneLabel: string = "Nessuna prenotazione";
   dataSelezionata: string;
+  data: Date;
 
-  constructor(private navController: NavController, private eventProvider: EventProvider, private alertCtrl: AlertController, private actionSheetCtrl: ActionSheetController, private userProvider: UserProvider) {
+  constructor(private navController: NavController, private eventProvider: EventProvider, private actionSheetCtrl: ActionSheetController, private userProvider: UserProvider) {
   }
 
   ionViewWillEnter() {
     this.loadEvents();
-    if (localStorage.getItem('currentUser') === null) {
+    if (localStorage.getItem('currentUser') === null && localStorage.getItem('currentPassword') === null ) {
       this.navController.setRoot(LoginPage);
     }
+    this.dataSelezionata = "";
+    this.calendar.currentDate = new Date();
   }
 
   isToday: boolean;
@@ -65,13 +70,14 @@ export class CalendarPage {
     this.viewTitle = title;
   }
 
-  onEventSelected(event) {
-    console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title);
-    if (event.user.toString().equals(localStorage.getItem('currentUser'))) {
-      this.actionSheetEvento(event);
-    } else {
+  onEventSelected(event: Event) {
+    console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title + event.user.username);
+    this.navController.push(EventDetailsPage, {
+      selectedEvent: event
+    });
+    // console.log("evento selezionato: " + event);
+    // console.log("user: " + event.user.username);
 
-    }
 
   }
 
@@ -82,10 +88,7 @@ export class CalendarPage {
   onTimeSelected(ev) {
     console.log('Selected time: ' + ev.selectedTime + ', hasEvents: ' +
       (ev.events !== undefined && ev.events.length !== 0) + ', disabled: ' + ev.disabled);
-    let date = ev.selectedTime;
-    date.setDate(date.getDate() + 1);
-    this.dataSelezionata = date.toISOString();
-    console.log("time selected" + this.dataSelezionata)
+    this.data = ev.selectedTime;
   }
 
   onCurrentDateChanged(event: Date) {
@@ -116,30 +119,36 @@ export class CalendarPage {
           startTime: new Date(a.startTime),
           endTime: new Date(a.endTime),
           allDay: a.allDay,
+          user: a.user,
+          giorno: a.giorno,
         });
       }
       this.myCalendar.loadEvents();
+      console.log(this.eventList);
     }, err => {
       console.log(err);
     });
   }
 
   add() {
-    console.log("add" + this.dataSelezionata)
+    console.log("add" + this.data)
+    if(this.data===this.calendar.currentDate){
+      this.dataSelezionata=this.data.toISOString();
+    }
+    else{
+      this.data.setDate(this.data.getDate() + 1);
+      this.dataSelezionata = this.data.toISOString();
+      console.log("time selected" + this.dataSelezionata)
+    }
     this.navController.push(PrenotaPage, {
       oggi: this.dataSelezionata
     });
   }
 
 
-  flush() {
-    this.navController.setRoot(CalendarPage)
-  }
-
-
   actionSheetLogout() {
     let actionSheet = this.actionSheetCtrl.create({
-      title: "Sei loggato come " + localStorage.getItem('currentUser'),
+      title: "Sei loggato come " + atob(localStorage.getItem('currentUser')),
       buttons: [
         {
           text: 'Logout',
@@ -163,43 +172,10 @@ export class CalendarPage {
     actionSheet.present();
   }
 
-
-  actionSheetEvento(event) {
-    let actionSheet = this.actionSheetCtrl.create({
-      title: "Hai selezionato " + event.title,
-      buttons: [
-        {
-          text: 'Elimina',
-          icon: 'trash',
-          role: 'destructive',
-          handler: () => {
-            console.log('Elimina clicked');
-          }
-        },
-        {
-          text: 'Modifica',
-          icon: 'create',
-          handler: () => {
-            console.log('Modifica clicked');
-          }
-        },
-        {
-          text: 'Annulla',
-          role: 'cancel',
-          icon: 'close',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        }
-      ]
-    });
-
-    actionSheet.present();
-  }
-
-
   logout() {
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUserProfile');
+    localStorage.removeItem('currentPassword');
     this.userProvider.logout().subscribe(res => {
       console.log(res);
     }, err => {
@@ -208,31 +184,4 @@ export class CalendarPage {
     this.navController.setRoot(LoginPage);
   }
 
-  elimina(event) {
-    let confirm = this.alertCtrl.create({
-      title: 'Conferma',
-      subTitle: 'Vuoi eliminare' + event.title + '?',
-      buttons: [
-        {
-          text: 'SI',
-          handler: () => {
-            console.log('Si clicked');
-            this.eventProvider.deleteEvent(event.id).subscribe(val => {
-              console.log(val);
-              this.flush();
-            })
-          }
-        },
-        {
-          text: 'NO',
-          handler: () => {
-            console.log('No clicked');
-          }
-        }
-      ]
-    });
-    confirm.present();
-
-  }
 }
-

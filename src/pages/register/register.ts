@@ -13,22 +13,22 @@ export class RegisterPage {
 
   user: User = new User;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider) {
   }
 
   register() {
     console.log(this.user)
     this.user.profileType = UserProfileType.ROLE_USER;
-    this.userProvider.register(this.user).subscribe(res => {
+    this.userProvider.registerAlert(this.user).subscribe(res => {
         console.log(res);
         this.navCtrl.setRoot(LoginPage);
       }, err => {
-      let alert = this.alertCtrl.create({
-        title: 'Username già in uso',
-        subTitle: 'Inserisci un nuovo username',
-        buttons: ['Ok']
-      });
-      alert.present();
+      // let alert = this.alertCtrl.create({
+      //   title: 'Username già in uso',
+      //   subTitle: 'Inserisci un nuovo username',
+      //   buttons: ['Ok']
+      // });
+      // alert.present();
         console.log(err);
       }
     );

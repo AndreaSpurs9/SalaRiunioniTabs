@@ -11,20 +11,33 @@ import {RegisterPage} from "../register/register";
 })
 export class LoginPage {
 
-  user: User = new User;
+  user = new User;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private alertCtrl: AlertController) {
   }
 
+  ionViewWillEnter() {
+  }
+
   login() {
-    console.log(this.user)
+    console.log(this.user);
     this.userProvider.login(this.user).subscribe(res => {
-        console.log(res);
-        localStorage.setItem('currentUser', this.user.username);
-        this.navCtrl.setRoot(CalendarPage);
+        localStorage.setItem('currentUser', btoa(this.user.username));
+        localStorage.setItem('currentPassword', btoa(this.user.password));
+
+        this.userProvider.findByUsername(this.user).subscribe(res => {
+          console.log("findbyusername");
+          let userDetails: User = res;
+          localStorage.setItem('currentUserProfile', userDetails.profileType.toString());
+          this.navCtrl.setRoot(CalendarPage);
+        }, err => {
+          console.log(err);
+        })
+
+
       }, err => {
         let alert = this.alertCtrl.create({
-          title:'Credenziali errate',
+          title: 'Credenziali errate',
           subTitle: 'Inserisci username e password corretti',
           buttons: ['Ok']
         });
@@ -33,9 +46,10 @@ export class LoginPage {
         console.log(err);
       }
     );
+
   }
 
-  goToRegister(){
+  goToRegister() {
     this.navCtrl.push(RegisterPage);
   }
 

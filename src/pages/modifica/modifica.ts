@@ -4,22 +4,20 @@ import {Event} from "../../app/model/Event";
 import {AlertController, NavController, NavParams} from "ionic-angular";
 import {CalendarPage} from "../calendar/calendar";
 
-
 @Component({
-  selector: 'page-prenota',
-  templateUrl: 'prenota.html',
+  selector: 'page-modifica',
+  templateUrl: 'modifica.html',
 })
-export class PrenotaPage {
-
-  evento: Event = new Event;
+export class ModificaPage {
+  evento = new Event();
   giorno: string;
-  startTime: string;
-  endTime: string;
   flag: boolean;
   today: string;
   minDate: string;
   maxDate: string;
   dataSelezionata: string;
+  startPulita: string;
+  endPulita: string;
 
   constructor(private navController: NavController, private navParams: NavParams, private eventProvider: EventProvider, private alertCtrl: AlertController) {
 
@@ -29,13 +27,22 @@ export class PrenotaPage {
     this.today = new Date().toISOString();
     this.minDate = "2017-01-01";
     this.maxDate = "2030-12-31";
-    this.dataSelezionata = this.navParams.get('oggi');
-    console.log("prenota" + this.dataSelezionata)
+    this.evento = this.navParams.get('eventoDaModificare');
+    this.giorno = this.evento.giorno;
+    console.log(this.evento.startTime + "start");
+    console.log(this.evento.giorno + "giorno")
+
+    let giornoStartSplit = new Array();
+    let giornoEndSplit = new Array();
+    giornoStartSplit = this.evento.startTime.toString().split(" ");
+    giornoEndSplit = this.evento.endTime.toString().split(" ");
+    this.startPulita = giornoStartSplit[4].slice(0, 5);
+    this.endPulita = giornoEndSplit[4].slice(0, 5);
+
+
   }
 
-  prenotazione() {
-    this.giorno = this.dataSelezionata.slice(0, 10);
-    this.evento.giorno = this.giorno;
+  modifica() {
     let giornoSplit = this.giorno.split("-");
     let giornoOrdinato: string = giornoSplit[2] + "/" + giornoSplit[1] + "/" + giornoSplit[0];
     if (this.flag == true) {
@@ -43,17 +50,16 @@ export class PrenotaPage {
       this.evento.endTime = this.giorno + " 18:00";
       this.evento.allDay = true;
     } else {
-      this.evento.startTime = this.giorno + " " + this.startTime;
+      this.evento.startTime = this.giorno + " " + this.startPulita;
       console.log(this.evento.startTime);
-      this.evento.endTime = this.giorno + " " + this.endTime;
+      this.evento.endTime = this.giorno + " " + this.endPulita;
       console.log(this.evento.endTime);
       this.evento.allDay = false;
     }
-
     this.eventProvider.createEventAlert(this.evento).subscribe(res => {
       console.log(res);
       let confirm = this.alertCtrl.create({
-        title: 'Prenotazione inserita',
+        title: 'Prenotazione modificata',
         message: localStorage.getItem('currentUser') + ' hai prenotato la sala riunioni per il giorno ' + giornoOrdinato + ' con il seguente orario: ' + this.evento.startTime.substring(11, 16) + " -> " + this.evento.endTime.substring(11, 16),
         buttons: ['OK']
       });
@@ -61,13 +67,6 @@ export class PrenotaPage {
       this.navController.setRoot(CalendarPage);
     }, err => {
       console.log(err);
-      // let confirm = this.alertCtrl.create({
-      //   title: 'Orario non disponibile!',
-      //   subTitle: 'La fascia oraria selezionata è già stata prenotata',
-      //   buttons: ['OK']
-      // });
-      // confirm.present();
     });
   }
-
 }

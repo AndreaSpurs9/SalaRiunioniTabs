@@ -1,0 +1,18 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Dettagli prenotazione</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-item><b>Oggetto riunione - </b>{{this.selectedEvent.title}}</ion-item>
+  <ion-item><b>User - </b>{{this.selectedEvent.user.username}}</ion-item>
+  <ion-item><b>Giorno - </b>{{this.giornoStartOrdinato}}</ion-item>
+  <ion-item><b>Inizio - </b>{{this.startPulita}}</ion-item>
+  <ion-item><b>Fine - </b>{{this.endPulita}}</ion-item>
+</ion-content>
+
+
