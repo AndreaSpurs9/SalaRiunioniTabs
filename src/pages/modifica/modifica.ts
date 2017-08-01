@@ -56,11 +56,11 @@ export class ModificaPage {
       console.log(this.evento.endTime);
       this.evento.allDay = false;
     }
-    this.eventProvider.createEventAlert(this.evento).subscribe(res => {
+    this.eventProvider.editEventAlert(this.evento).subscribe(res => {
       console.log(res);
       let confirm = this.alertCtrl.create({
-        title: 'Prenotazione modificata',
-        message: localStorage.getItem('currentUser') + ' hai prenotato la sala riunioni per il giorno ' + giornoOrdinato + ' con il seguente orario: ' + this.evento.startTime.substring(11, 16) + " -> " + this.evento.endTime.substring(11, 16),
+        title: 'Prenotazione inserita',
+        message:  atob(localStorage.getItem('currentUser')) + ' hai prenotato la sala riunioni per il giorno ' + giornoOrdinato + ' con il seguente orario: ' + this.evento.startTime.substring(11, 16) + " -> " + this.evento.endTime.substring(11, 16),
         buttons: ['OK']
       });
       confirm.present();

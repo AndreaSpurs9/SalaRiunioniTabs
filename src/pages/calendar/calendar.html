@@ -3,10 +3,10 @@
     <!--<button ion-button menuToggle>-->
       <!--<ion-icon name="menu"></ion-icon>-->
     <!--</button>-->
-    <ion-title>{{viewTitle}}</ion-title>
+   <ion-title>{{viewTitle}}</ion-title>
     <ion-buttons end>
       <button ion-button (click)="actionSheetLogout()"><ion-icon name="more"></ion-icon></button>
-      <button ion-button [disabled]="isToday" (click)="today()">Oggi</button>
+      <button ion-button ion-long-press [interval]="5000" (onPressing)="infame()" [disabled]="isToday" (click)="today()">Oggi</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>

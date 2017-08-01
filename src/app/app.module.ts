@@ -18,6 +18,8 @@ import {CustomBrowserXhr} from "./services/custom-browser-xhr";
 import {EventDetailsPage} from "../pages/event-details/event-details";
 import {IonicStorageModule} from "@ionic/storage";
 import {ModificaPage} from "../pages/modifica/modifica";
+import {LongPressModule} from "ionic-long-press";
+import {TestingPage} from "../pages/testing/testing";
 
 
 @NgModule({
@@ -30,6 +32,7 @@ import {ModificaPage} from "../pages/modifica/modifica";
     RegisterPage,
     EventDetailsPage,
     ModificaPage,
+    TestingPage,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,7 @@ import {ModificaPage} from "../pages/modifica/modifica";
     NgCalendarModule,
     HttpModule,
     IonicStorageModule.forRoot(),
+    LongPressModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -53,6 +57,7 @@ import {ModificaPage} from "../pages/modifica/modifica";
     RegisterPage,
     EventDetailsPage,
     ModificaPage,
+    TestingPage,
   ],
   providers: [
     StatusBar,

@@ -54,7 +54,7 @@ export class PrenotaPage {
       console.log(res);
       let confirm = this.alertCtrl.create({
         title: 'Prenotazione inserita',
-        message: localStorage.getItem('currentUser') + ' hai prenotato la sala riunioni per il giorno ' + giornoOrdinato + ' con il seguente orario: ' + this.evento.startTime.substring(11, 16) + " -> " + this.evento.endTime.substring(11, 16),
+        message:  atob(localStorage.getItem('currentUser')) + ' hai prenotato la sala riunioni per il giorno ' + giornoOrdinato + ' con il seguente orario: ' + this.evento.startTime.substring(11, 16) + " -> " + this.evento.endTime.substring(11, 16),
         buttons: ['OK']
       });
       confirm.present();

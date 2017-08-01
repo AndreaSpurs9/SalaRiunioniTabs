@@ -1,12 +1,13 @@
 import {Component, ViewChild} from '@angular/core';
 import {CalendarComponent} from "ionic2-calendar/calendar";
 import {EventProvider} from "../../providers/event/event";
-import {ActionSheetController, NavController} from "ionic-angular";
+import {ActionSheetController, AlertController, NavController} from "ionic-angular";
 import {LoginPage} from "../login/login";
 import {PrenotaPage} from "../prenota/prenota";
 import {UserProvider} from "../../providers/user/user";
 import {EventDetailsPage} from "../event-details/event-details";
 import {Event} from "../../app/model/Event";
+import {TestingPage} from "../testing/testing";
 
 @Component({
   templateUrl: "calendar.html"
@@ -21,12 +22,12 @@ export class CalendarPage {
   dataSelezionata: string;
   data: Date;
 
-  constructor(private navController: NavController, private eventProvider: EventProvider, private actionSheetCtrl: ActionSheetController, private userProvider: UserProvider) {
+  constructor(private navController: NavController, private eventProvider: EventProvider, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController, private userProvider: UserProvider) {
   }
 
   ionViewWillEnter() {
     this.loadEvents();
-    if (localStorage.getItem('currentUser') === null && localStorage.getItem('currentPassword') === null ) {
+    if (localStorage.getItem('currentUser') === null && localStorage.getItem('currentPassword') === null) {
       this.navController.setRoot(LoginPage);
     }
     this.dataSelezionata = "";
@@ -132,10 +133,10 @@ export class CalendarPage {
 
   add() {
     console.log("add" + this.data)
-    if(this.data===this.calendar.currentDate){
-      this.dataSelezionata=this.data.toISOString();
+    if (this.isToday) {
+      this.dataSelezionata = this.data.toISOString();
     }
-    else{
+    else {
       this.data.setDate(this.data.getDate() + 1);
       this.dataSelezionata = this.data.toISOString();
       console.log("time selected" + this.dataSelezionata)
@@ -182,6 +183,10 @@ export class CalendarPage {
       console.log(err);
     });
     this.navController.setRoot(LoginPage);
+  }
+
+  infame() {
+    this.navController.push(TestingPage);
   }
 
 }
